@@ -25,16 +25,18 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class GestorFicheros {
-	
+	// Declaracion de constantes pra rutas de carpetas
 	public static final String CARPETA_PRINCIPAL = "C:/Biblioteca";
 	public static final String CARPETA_XML = CARPETA_PRINCIPAL + "/XML";
 	private static final String CARPETA_SEGURIDAD = CARPETA_PRINCIPAL + "/Seguridad";
 
+	// Declaracion de constantes pra validar años
 	public static final int MIN_ANIO_PUBLICACION = 2000;
 	public static final int MAX_ANIO_PUBLICACION = Year.now().getValue();
 	public static final int MIN_ANIO_NACIMIENTO = 1940;
 	public static final int MAX_ANIO_NACIMIENTO = 2005;
 
+	// Metodo para crear carpeta de ficheros automaticamente
 	public void crearCarpetaFicheros() {
 
 		try {
@@ -61,10 +63,12 @@ public class GestorFicheros {
 
 		} catch (IOException e) {
 			System.err.println("¡ERROR! Hubo un problema al crear los ficheros.");
+            e.printStackTrace();
 		}
 		
 	}
 
+	// Metodo para guardar libros en el fichero
 	public void escribirLibrosBinario(List<Libro> libros, String filename) {
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
 			oos.writeObject(libros);
@@ -73,6 +77,7 @@ public class GestorFicheros {
 		}
 	}
 
+	// Metodo para leer libros en el fichero
 	public List<Libro> leerLibrosBinario(String filename) {
 		List<Libro> listaLibros = new ArrayList<>();
 
@@ -85,6 +90,7 @@ public class GestorFicheros {
 		return listaLibros;
 	}
 
+	// Metodo para modificar libros en el fichero
 	public void modificarLibroBinario(String filename, int id) {
 		List<Libro> listaLibros = leerLibrosBinario(filename);
 		Scanner scLibros = new Scanner(System.in);
@@ -119,7 +125,7 @@ public class GestorFicheros {
 				do {
 					System.out.printf("Año Publicación (%d-%d): %n", MIN_ANIO_PUBLICACION, MAX_ANIO_PUBLICACION);
 					anioModificado = scLibros.nextInt();
-				} while (!validarAnioPublicacion(anioModificado));
+				} while (!esAnioPubValido(anioModificado));
 
 				scLibros.nextLine();
 				
@@ -141,11 +147,12 @@ public class GestorFicheros {
 		if (!encontrado) {
 			System.err.println("¡ERROR! No se encontró ningún libro con la ID " + id + " en el archivo.");
 		} else {
-			System.out.println("¡Libro con "+id+" modificado con éxito!");
+			System.out.println("¡Libro con ID "+id+" modificado con éxito!");
 		}
 
 	}
 
+	// Metodo para eliminar libros en el fichero
 	public void eliminarLibroBinario(String filename, int id) {
 		List<Libro> listaLibros = leerLibrosBinario(filename);
 		boolean encontrado = false;
@@ -173,10 +180,11 @@ public class GestorFicheros {
 		if (!encontrado) {
 			System.err.println("¡ERROR! No se encontró ningún libro con la ID " + id + " en el archivo.");
 		} else {
-			System.out.println("¡Libro con "+id+" eliminado con éxito!");
+			System.out.println("¡Libro con ID "+id+" eliminado con éxito!");
 		}
 	}
 
+	// Metodo para guardar autores en el fichero
 	public void escribirAutoresBinario(List<Autor> autores, String filename) {
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
 			oos.writeObject(autores);
@@ -185,6 +193,7 @@ public class GestorFicheros {
 		}
 	}
 
+	// Metodo para leer autores en el fichero
 	public List<Autor> leerAutoresBinario(String filename) {
 		List<Autor> listaAutores = new ArrayList<>();
 
@@ -197,6 +206,7 @@ public class GestorFicheros {
 		return listaAutores;
 	}
 
+	// Metodo para modificar autores en el fichero
 	public void modificarAutorBinario(String filename, int id) {
 		List<Autor> listaAutores = leerAutoresBinario(filename);
 		Scanner scAutores = new Scanner(System.in);
@@ -228,7 +238,7 @@ public class GestorFicheros {
 				do {
 					System.out.printf("Año Nacimiento (%d-%d): %n", MIN_ANIO_NACIMIENTO, MAX_ANIO_NACIMIENTO);
 					anioModificado = scAutores.nextInt();
-				} while (!validarAnioNacimiento(anioModificado));
+				} while (!esAnioNacValido(anioModificado));
 
 				// Modificamos el autor con los datos añadidos por el usuario
 				autor.setNombre(nombreModificado);
@@ -247,11 +257,12 @@ public class GestorFicheros {
 		if (!encontrado) {
 			System.err.println("¡ERROR! No se encontró ningún autor con la ID " + id + " en el archivo.");
 		} else {
-			System.out.println("¡Autor con "+id+" modificado con éxito!");
+			System.out.println("¡Autor con ID "+id+" modificado con éxito!");
 		}
 
 	}
 
+	// Metodo para eliminar autores en el fichero
 	public void eliminarAutorBinario(String filename, int id) {
 		List<Autor> listaAutores = leerAutoresBinario(filename);
 		boolean encontrado = false;
@@ -279,10 +290,11 @@ public class GestorFicheros {
 		if (!encontrado) {
 			System.err.println("¡ERROR! No se encontró ningún autor con la ID " + id + " en el archivo.");
 		} else {
-			System.out.println("¡Autor con id "+id+" eliminado con éxito!");
+			System.out.println("¡Autor con ID "+id+" eliminado con éxito!");
 		}
 	}
 
+	// Metodo para leer prestamos en el fichero
 	public ArrayList<String> leerPrestamos(String filename) {
 		ArrayList<String> listaPrestamos = new ArrayList<>();
 
@@ -299,6 +311,7 @@ public class GestorFicheros {
 
 	}
 
+	// Metodo para guardar prestamos en el fichero
 	public void escribirPrestamos(ArrayList<String> listaPrestamos, String filename) {
 		try (FileWriter fw = new FileWriter(filename)) {
 			for (String prestamo : listaPrestamos) {
@@ -309,6 +322,7 @@ public class GestorFicheros {
 		}
 	}
 
+	// Metodo para añadir prestamos al fichero
 	public void crearPrestamos(String filePrestamos, String fileLibros, List<Libro> listaLibros, List<String> listaPrestamos) {
 
 		Scanner scPrestamos = new Scanner(System.in);
@@ -362,7 +376,7 @@ public class GestorFicheros {
 				System.out.println("Prestamos añadido con exito");
 
 			} else if (id == libroMostrar.getIdLibro() && libroMostrar.isEstado()) {
-				System.out.println("Este libro ya está prestado");
+				System.out.println("El libro con ID "+id+" ya está prestado");
 				encontrado = true;
 			}
 		}
@@ -372,6 +386,7 @@ public class GestorFicheros {
 		}
 	}
 
+	// Método para crear copia de seguridad de los archivos de libros y autores
 	public void crearCopiaSeguridad(String fileLibros, String fileAutores) {
 
 		try {
@@ -388,14 +403,13 @@ public class GestorFicheros {
 				ficheroLibros.createNewFile();
 				ficheroAutores.createNewFile();
 
-			} else { // Si estos existen añade el contenido de los ficheros "libros.bin" y
-						// "autores.bin" a las copias creadas anteriormente
+			} else { // Si estos existen añade el contenido de los ficheros "libros.bin" y "autores.bin" a las copias creadas anteriormente
 
 				List<Libro> listaLibros = leerLibrosBinario(fileLibros);
 				List<Autor> listaAutores = leerAutoresBinario(fileAutores);
 
-				escribirAutoresBinario(listaAutores, CARPETA_SEGURIDAD + "autores (copia).bin");
-				escribirLibrosBinario(listaLibros, CARPETA_SEGURIDAD + "libros (copia).bin");
+				escribirAutoresBinario(listaAutores, CARPETA_SEGURIDAD + "/autores (copia).bin");
+				escribirLibrosBinario(listaLibros, CARPETA_SEGURIDAD + "/libros (copia).bin");
 				
 			}
 
@@ -408,7 +422,7 @@ public class GestorFicheros {
 	public void copiaSeguridad() {
 
 		// Leemos la lista de libros del archivo de la copia de seguridad
-		List<Libro> listaLibros = leerLibrosBinario(CARPETA_SEGURIDAD + "libros (copia).bin");
+		List<Libro> listaLibros = leerLibrosBinario(CARPETA_SEGURIDAD + "/libros (copia).bin");
 		System.out.println("Fichero Libros:");
 		if (!listaLibros.isEmpty()) {
 
@@ -428,7 +442,7 @@ public class GestorFicheros {
 		}
 
 		// Leemos la lista de autores del archivo de la copia de seguridad
-		List<Autor> listaAutores = leerAutoresBinario(CARPETA_SEGURIDAD + "autores (copia).bin");
+		List<Autor> listaAutores = leerAutoresBinario(CARPETA_SEGURIDAD + "/autores (copia).bin");
 		System.out.println("Fichero Autores:");
 		if (!listaAutores.isEmpty()) {
 
@@ -447,6 +461,7 @@ public class GestorFicheros {
 		}
 	}
 
+	// Metodo para exportar fichero libros
 	public void exportarLibros(String fileLibros, String XmlLibros) {
 		try {
 			List<Libro> listaLibros = leerLibrosBinario(fileLibros);
@@ -464,6 +479,7 @@ public class GestorFicheros {
 			Element libreria = documentLibros.createElement("libreria");
 			documentLibros.appendChild(libreria);
 
+			// Comprobamos que la lista no esta vacia
 			if (!listaLibros.isEmpty()) {
 				for (Libro libroExp : listaLibros) {
 					Element libros = documentLibros.createElement("libro");
@@ -503,6 +519,7 @@ public class GestorFicheros {
 		}
 	}
 
+	// Metodo para exportar fichero autores
 	public void exportarAutores(String fileAutores, String XmlAutores) {
 		try {
 			List<Autor> listaAutores = leerAutoresBinario(fileAutores);
@@ -517,9 +534,11 @@ public class GestorFicheros {
 			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
 			Document documentAutores = builder.newDocument();
+
 			Element autoria = documentAutores.createElement("autoria");
 			documentAutores.appendChild(autoria);
 
+			// Comprobamos que la lista no esta vacia
 			if (!listaAutores.isEmpty()) {
 				for (Autor autorExp : listaAutores) {
 					Element autores = documentAutores.createElement("autor");
@@ -534,8 +553,7 @@ public class GestorFicheros {
 					autores.appendChild(nacionalidad);
 
 					Element anioNacimiento = documentAutores.createElement("anioNacimiento");
-					anioNacimiento
-							.appendChild(documentAutores.createTextNode(String.valueOf(autorExp.getAnioNacimiento())));
+					anioNacimiento.appendChild(documentAutores.createTextNode(String.valueOf(autorExp.getAnioNacimiento())));
 					autores.appendChild(anioNacimiento);
 
 					autoria.appendChild(autores);
@@ -554,6 +572,7 @@ public class GestorFicheros {
 		}
 	}
 
+	// Metodo para importar fichero libros
 	public void importarLibros(String XmlLibros, String fileLibros) {
 		try {
 			List<Libro> listaLibros = new ArrayList<>();
@@ -570,6 +589,7 @@ public class GestorFicheros {
 				NodeList aniosPublicacion = elementoLibro.getElementsByTagName("anioPublicacion");
 				NodeList generos = elementoLibro.getElementsByTagName("genero");
 
+				// Comprobamos que los campos del xml no estan vacios
 				if (titulos.getLength() > 0 && autores.getLength() > 0 && aniosPublicacion.getLength() > 0
 						&& generos.getLength() > 0) {
 					Element titulo = (Element) titulos.item(0);
@@ -595,6 +615,8 @@ public class GestorFicheros {
 
 			// Guardar la lista actualizada en el fichero binario
 			escribirLibrosBinario(listaLibrosActual, fileLibros);
+			
+			System.out.println("Libros importados con éxito");
 
 		} catch (SAXException | IOException e) {
 			e.printStackTrace();
@@ -603,6 +625,7 @@ public class GestorFicheros {
 		}
 	}
 
+	// Metodo para exportar fichero autores
 	public void importarAutores(String XmlAutores, String fileAutores) {
 		try {
 			List<Autor> listaAutores = new ArrayList<>();
@@ -618,6 +641,7 @@ public class GestorFicheros {
 				NodeList nacionalidades = elementoAutor.getElementsByTagName("nacionalidad");
 				NodeList aniosNacimiento = elementoAutor.getElementsByTagName("anioNacimiento");
 
+				// Comprobamos que los campos del xml no estan vacios
 				if (nombres.getLength() > 0 && nacionalidades.getLength() > 0 && aniosNacimiento.getLength() > 0) {
 					Element nombre = (Element) nombres.item(0);
 					Element nacionalidad = (Element) nacionalidades.item(0);
@@ -628,7 +652,7 @@ public class GestorFicheros {
 							Integer.parseInt(anioNacimiento.getTextContent()));
 					autor.setIdAutor(Integer.parseInt(elementoAutor.getAttribute("id")));
 
-					// Agregar el nuevo libro a la lista
+					// Agregar el nuevo autor a la lista
 					listaAutores.add(autor);
 				}
 			}
@@ -641,6 +665,8 @@ public class GestorFicheros {
 
 			// Guardar la lista actualizada en el fichero binario
 			escribirAutoresBinario(listaAutoresActual, fileAutores);
+			
+			System.out.println("Autores importados con éxito");
 
 		} catch (SAXException | IOException e) {
 			e.printStackTrace();
@@ -649,11 +675,13 @@ public class GestorFicheros {
 		}
 	}
 
-	public static boolean validarAnioPublicacion(int anio) {
+	// Método para validar el año de publicación
+	public static boolean esAnioPubValido(int anio) {
 	    return anio >= MIN_ANIO_PUBLICACION && anio <= MAX_ANIO_PUBLICACION;
 	}
 
-	public static boolean validarAnioNacimiento(int anio) {
+	// Método para validar el año de nacimiento
+	public static boolean esAnioNacValido(int anio) {
 	    return anio >= MIN_ANIO_NACIMIENTO && anio <= MAX_ANIO_NACIMIENTO;
 	}
 }

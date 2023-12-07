@@ -5,16 +5,17 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Principal {
-
-	// Declaración de objetos y rutas de archivos
+	// Scanner para la entrada del usuario
 	private static Scanner sc = new Scanner(System.in);
+	// Creamos una intancia de la clase GestorFicheros (Nos permitira acceder a los metodos de funcionalidad)
 	private static GestorFicheros gestorFicheros = new GestorFicheros();
-	private final static String RUTA_LIBROS = gestorFicheros.CARPETA_PRINCIPAL + "libros.bin";
-	private final static String RUTA_AUTORES = gestorFicheros.CARPETA_PRINCIPAL + "autores.bin";
-	private final static String RUTA_PRESTAMOS = gestorFicheros.CARPETA_PRINCIPAL + "prestamos.txt";
-	private final static String RUTA_XML_LIBROS = gestorFicheros.CARPETA_PRINCIPAL + "libros.xml";
-	private final static String RUTA_XML_AUTORES = gestorFicheros.CARPETA_PRINCIPAL + "autores.xml";
-
+	// Declaracion de constantes pra rutas de archivos
+	private final static String RUTA_LIBROS = GestorFicheros.CARPETA_PRINCIPAL + "/libros.bin";
+	private final static String RUTA_AUTORES = GestorFicheros.CARPETA_PRINCIPAL + "/autores.bin";
+	private final static String RUTA_PRESTAMOS = GestorFicheros.CARPETA_PRINCIPAL + "/prestamos.txt";
+	private final static String RUTA_XML_LIBROS = GestorFicheros.CARPETA_XML + "/libros.xml";
+	private final static String RUTA_XML_AUTORES = GestorFicheros.CARPETA_XML + "/autores.xml";
+	
 	public static void main(String[] args) {
 		boolean salir = false;
 		gestorFicheros.crearCarpetaFicheros();
@@ -84,7 +85,7 @@ public class Principal {
 			case 1:
 
 				// Pedimos al usuario los datos del libro
-				System.out.printf("Se deben añadir libros cuyo año de publicación esté entre (%d-%d) %n", gestorFicheros.MIN_ANIO_PUBLICACION, gestorFicheros.MAX_ANIO_PUBLICACION);
+				System.out.printf("Se deben añadir libros cuyo año de publicación esté entre (%d-%d) %n", GestorFicheros.MIN_ANIO_PUBLICACION, GestorFicheros.MAX_ANIO_PUBLICACION);
 				System.out.println("Título:");
 				sc.nextLine();
 				String titulo = sc.nextLine();
@@ -94,9 +95,9 @@ public class Principal {
 				
 				// Validamos al entrada del año de publicacion del usuario
 				do {
-					System.out.printf("Año Publicación (%d-%d): %n",  gestorFicheros.MIN_ANIO_PUBLICACION,  gestorFicheros.MAX_ANIO_PUBLICACION);
+					System.out.printf("Año Publicación (%d-%d): %n",  GestorFicheros.MIN_ANIO_PUBLICACION,  GestorFicheros.MAX_ANIO_PUBLICACION);
 					anio = sc.nextInt();
-				} while (!gestorFicheros.validarAnioPublicacion(anio));
+				} while (!GestorFicheros.esAnioPubValido(anio));
 
 				sc.nextLine();
 
@@ -193,7 +194,7 @@ public class Principal {
 			case 1:
 
 				// Pedimos al usuario los datos del autor
-				System.out.printf("Se deben añadir autores cuyo año de nacimiento sea (%d-%d) %n",  gestorFicheros.MIN_ANIO_NACIMIENTO,  gestorFicheros.MAX_ANIO_NACIMIENTO);
+				System.out.printf("Se deben añadir autores cuyo año de nacimiento sea (%d-%d) %n",  GestorFicheros.MIN_ANIO_NACIMIENTO,  GestorFicheros.MAX_ANIO_NACIMIENTO);
 				System.out.println("Nombre:");
 				sc.nextLine();
 				String nombre = sc.nextLine();
@@ -203,9 +204,9 @@ public class Principal {
 
 				int anio;
 				do {
-					System.out.printf("Año Nacimiento (%d-%d): %n",  gestorFicheros.MIN_ANIO_NACIMIENTO,  gestorFicheros.MAX_ANIO_NACIMIENTO);
+					System.out.printf("Año Nacimiento (%d-%d): %n",  GestorFicheros.MIN_ANIO_NACIMIENTO,  GestorFicheros.MAX_ANIO_NACIMIENTO);
 					anio = sc.nextInt();
-				} while (!gestorFicheros.validarAnioNacimiento(anio));
+				} while (!GestorFicheros.esAnioNacValido(anio));
 
 				// Creamos el autor
 				Autor autor = new Autor(nombre, nacionalidad, anio);
